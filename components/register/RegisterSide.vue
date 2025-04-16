@@ -3,13 +3,28 @@ import type { FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
 
 const schema = z.object({
+  name: z
+		.string()
+		.trim()
+		.min(3, { message: 'Name must be at least 3 characters long' })
+		.refine(
+			(val) => val.split(' ').filter(Boolean).length >= 2,
+			{ message: 'Please enter your full name' }
+		),
   email: z.string().email('Invalid email'),
   password: z.string().min(8, 'Must be at least 8 characters')
 })
 
 type Schema = z.output<typeof schema>
 
+const { user } = useUserSession()
+onMounted(() => {
+  // If there's already a session in the browser, then re-direct the user to their homepage
+  if (user.value) navigateTo({ name: 'home' })
+})
+  
 const state = reactive<Partial<Schema>>({
+  name: undefined,
   email: undefined,
   password: undefined,
 })
@@ -24,13 +39,15 @@ onMounted(() => {
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   isRegistering.value = true
+  const { name, email, password } = event.data
 
   try {
     const response = await $fetch('/api/user', {
       method: 'POST',
       body: {
-        email: event.data.email,
-        password: event.data.password,
+        name,
+        email,
+        password,
       }
     })
 
@@ -44,10 +61,9 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
           icon: 'i-lucide-arrow-right',
           label: 'Login',
           color: 'success',
-          variant: '',
           onClick: (event) => {
             event?.stopPropagation()
-            navigateTo({ to: '/' })
+            navigateTo({ path: '/' })
           }
         }]
       })
@@ -102,6 +118,20 @@ const showPassword = ref<boolean>(false)
           class="mt-3 space-y-4 w-full"
           @submit="onSubmit"
         >
+          <UFormField
+            label="Full name"
+            name="fullName"
+            class="space-y-2"
+            required
+          >
+            <UInput
+              v-model="state.name"
+              placeholder="John Doe"
+              class="w-full"
+              autocomplete="name"
+            />
+          </UFormField>
+
           <UFormField
             label="Email"
             name="email"

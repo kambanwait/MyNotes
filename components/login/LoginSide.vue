@@ -2,6 +2,8 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
 
+const { user } = useUserSession()
+
 const schema = z.object({
   email: z.string().email('Invalid email'),
   password: z.string()
@@ -16,6 +18,11 @@ const state = reactive<Partial<Schema>>({
 
 const toast = useToast()
 const isSubmitting = ref<boolean>(false)
+
+onMounted(() => {
+  // If there's already a session in the browser, then re-direct the user to their homepage
+  if (user.value) navigateTo({ name: 'home' })
+})
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   isSubmitting.value = true
@@ -32,9 +39,18 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     if (response?.ok) {
       toast.add({
         title: 'Logged in',
-        description: 'Redirecting to your notes',
+        description: "Redirecting to your notes. If you're not redirected automatically, click 'home' below.",
         color: 'success',
-        duration: 500,
+        duration: 0,
+        actions: [{
+          icon: 'i-lucide-house',
+          label: 'To your home page',
+          color: 'success',
+          onClick: (event) => {
+            event?.stopPropagation()
+            navigateTo({ name: 'home' })
+          }
+        }]
       })
       await navigateTo({ name: 'home' })
     } else {

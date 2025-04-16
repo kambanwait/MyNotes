@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { User } from '#auth-utils'
-
 definePageMeta({
   name: 'home',
   middleware: ['auth'],
@@ -17,7 +15,7 @@ const logout = async () => {
 
 <template>  
   <main v-if="user">
-    <h1>Welcome {{ user.email }}</h1>
+    <h1>Welcome {{ user.name }}</h1>
     <UButton @click="logout">Logout</UButton>
     <p>index</p>
   </main>
