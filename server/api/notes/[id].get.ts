@@ -1,8 +1,15 @@
-import { prisma } from '../../prisma/db'
+import { prisma } from '../../../prisma/db'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  const id = getRouterParam(event, 'id')
+
   try {
-    const notes = await prisma.note.findMany()
+    const notes = await prisma.note.findMany({
+      where: {
+        userId: Number(id),
+      }
+    })
+
     return {
       ok: true,
       data: notes
@@ -17,4 +24,6 @@ export default defineEventHandler(async () => {
     console.log(error)
     // }
   }
+
+  return `User profile!`
 })
