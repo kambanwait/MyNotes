@@ -12,6 +12,33 @@ export const useNotesStore = defineStore('notesStore', () => {
   }
 
   const fetchAllNotes = async () => {
+  const todaysNotes: ComputedRef<Note[]> = computed(() => {
+    return allNotes.value.filter((note: Note ) => {
+      const noteDate = new Date(note.updatedAt)
+      return noteDate.toDateString() === new Date().toDateString()
+    })
+  })
+  
+  const yesterdayNotes: ComputedRef<Note[]> = computed(() => {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    
+    return allNotes.value.filter((note: Note ) => {
+      const noteDate = new Date(note.updatedAt)
+      return noteDate.toDateString() === yesterday.toDateString()
+    })
+  })
+
+  const earlierNotes: ComputedRef<Note[]> = computed(() => {
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    
+    return allNotes.value.filter((note: Note ) => {
+      const noteDate = new Date(note.updatedAt)
+      return noteDate < yesterday && noteDate.toDateString() !== yesterday.toDateString()
+    })
+  })
+
     fetchingAllNotes.value = true
     try {
       const response = await $fetch('/api/notes')
@@ -33,6 +60,9 @@ export const useNotesStore = defineStore('notesStore', () => {
     fetchAllNotes,
     fetchingAllNotes,
     selectedNote,
-    allNotes
+    allNotes,
+    todaysNotes,
+    yesterdayNotes,
+    earlierNotes
   }
 })
