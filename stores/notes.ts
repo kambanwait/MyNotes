@@ -58,10 +58,42 @@ export const useNotesStore = defineStore('notesStore', () => {
     }
   }
 
+  const updatingNote = ref<boolean>(false);
+  const updateNote = async (updatedNote: Note['text'], noteId: Note['id']) => {
+    updatingNote.value = true;
+
+    try { 
+      const response = await $fetch(`/api/notes/${noteId}`, {
+        method: 'PATCH',
+        body: {
+          updatedNote,
+        }
+      })
+
+      if (response?.ok) {
+        fetchAllUserNotes()
+        setSelectedNote(response.data)
+        return {
+          ok: true,
+          data: 'success'
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      updatingNote.value = false;
+    }
+  }
+
+  const addNewNote = async () => {}
+
   return {
     setSelectedNote,
     fetchAllUserNotes,
+    addNewNote,
+    updateNote,
     fetchingAllNotes,
+    updatingNote,
     selectedNote,
     allNotes,
     todaysNotes,
