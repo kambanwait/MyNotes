@@ -2,13 +2,12 @@
 import { useDateFormat } from '@vueuse/core'
 import type { Note } from '~/types/notes.type';
 
-const toast = useToast()
 const props = defineProps<{
   selectedNote: Note | null
 }>()
 
-const { updateNote } = useNotesStore()
-const { updatingNote } = storeToRefs(useNotesStore())
+const { updateNote, handleCreateNewNote, addNote } = useNotesStore()
+const { updatingNote, newNote, creatingNewNote, addingNewNote } = storeToRefs(useNotesStore())
 
 const updatedNote = ref<Note['text'] | undefined>('');
 const formattedDate = (date: Date) => {
@@ -31,19 +30,11 @@ onMounted(() => {
 })
 
 const handleUpdateNote = async () => {
-  if (props.selectedNote) {
-    const response = await updateNote(updatedNote.value as string, props.selectedNote?.id)
+  if (props.selectedNote) await updateNote(updatedNote.value as string, props.selectedNote?.id);
+}
 
-    if (response?.ok) {
-      toast.add({
-        title: 'Updated note',
-        description: "Note was updated",
-        color: 'success',
-        duration: 2000,
-      })
-    }
-    
-  }
+const handleAddNewNote = async () => {
+  if (newNote.value.length) await addNote(new Date())
 }
 </script>
 
@@ -56,6 +47,7 @@ const handleUpdateNote = async () => {
         color="neutral"
         variant="ghost"
         size="sm"
+        @click="handleCreateNewNote"
       />
       <UButton
         label=""
@@ -78,7 +70,7 @@ const handleUpdateNote = async () => {
       </small>
       <textarea
         v-model="updatedNote"
-        class="text-zinc-400 w-full max-w-3xl mx-auto h-full !border-none !bg-transparent focus:outline-0"
+        class="text-zinc-400 w-full max-w-3xl mx-auto h-full !border-none !bg-transparent focus:outline-0 resize-none"
         placeholder="Start typing..."
       />
 
@@ -91,6 +83,28 @@ const handleUpdateNote = async () => {
         :loading="updatingNote"
         @click="handleUpdateNote"
       />
+    </main>
+
+    <main v-else-if="creatingNewNote">
+      <textarea
+        v-model="newNote"
+        class="text-zinc-400 w-full max-w-3xl mx-auto h-full !border-none !bg-transparent focus:outline-0 resize-none"
+        placeholder="Start typing..."
+      />
+
+      <UButton
+        v-if="newNote.length"
+        label="Save new note"
+        class="w-fit place-self-end"
+        color="success"
+        size="lg"
+        :loading="addingNewNote"
+        @click="handleAddNewNote"
+      />
+    </main>
+
+    <main v-else>
+      <p>Click Create Note</p>
     </main>
 
   </section>
