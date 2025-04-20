@@ -33,7 +33,8 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/fonts',
     '@nuxt/eslint',
-    'nuxt-auth-utils'
+    'nuxt-auth-utils',
+    '@pinia/nuxt',
   ],
 
   // runtimeConfig: {
