@@ -67,7 +67,7 @@ export const useNotesStore = defineStore('notesStore', () => {
     updatingNote.value = true;
 
     try { 
-      const response = await $fetch(`/api/notes/${noteId}`, {
+      const response = await $fetch<{ ok: boolean; data: Note[] }>(`/api/notes/${noteId}`, {
         method: 'PATCH',
         body: {
           updatedNote,
@@ -76,7 +76,7 @@ export const useNotesStore = defineStore('notesStore', () => {
 
       if (response?.ok) {
         fetchAllUserNotes()
-        setSelectedNote(response.data)
+        setSelectedNote(response.data[0])
         toast.add({
           title: 'Updated note',
           description: "Note was updated",
@@ -96,7 +96,7 @@ export const useNotesStore = defineStore('notesStore', () => {
     try {
       addingNewNote.value = true
 
-      const response = await $fetch('/api/notes', {
+      const response = await $fetch<{ ok: boolean; data: Note[] }>('/api/notes', {
         method: 'POST',
         body: {
           text: newNote.value,
@@ -112,11 +112,10 @@ export const useNotesStore = defineStore('notesStore', () => {
           color: 'success',
           duration: 1000,
         })
-        setSelectedNote(response?.data)
+        setSelectedNote(response?.data[0])
         fetchAllUserNotes()
         creatingNewNote.value = false
         newNote.value = ''
-        
       }
 
     } catch (error) {
@@ -133,18 +132,56 @@ export const useNotesStore = defineStore('notesStore', () => {
     selectedNote.value = null
   }
 
+  const deletingNote = ref<boolean>(false)
+  const deleteNote = async () => {
+    try {
+      deletingNote.value = true
+
+      if (user.value?.id !== selectedNote.value?.userId) {
+        toast.add({
+          title: "Note doesn't belong to this user!",
+          description: "Something's gone wrong here 🫣",
+          color: 'error',
+          duration: 5000,
+        })
+      }
+
+      const response = await $fetch<{ ok: boolean; data: Note[] }>(`/api/notes/${selectedNote.value?.id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        toast.add({
+          title: 'Note deleted',
+          description: "Note was deleted successfully",
+          color: 'success',
+          duration: 1000,
+        })
+        selectedNote.value = null
+        fetchAllUserNotes()
+      }
+      
+    } catch (error) {
+      console.error(error)
+    } finally {
+      deletingNote.value = false
+    }
+  }
+
   return {
     setSelectedNote,
     fetchAllUserNotes,
     addNote,
     updateNote,
     handleCreateNewNote,
+    deleteNote,
     fetchingAllNotes,
     updatingNote,
     addingNewNote,
     selectedNote,
     newNote,
     creatingNewNote,
+    deletingNote,
     allNotes,
     todaysNotes,
     yesterdayNotes,
