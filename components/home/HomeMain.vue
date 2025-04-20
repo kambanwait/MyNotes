@@ -76,7 +76,7 @@ const handleCreateNewNote = () => {
 
     <main
       v-if="selectedNote"
-      class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5"
+      class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr_auto] gap-5"
     >
       <small
         class="text-zinc-500 text-left w-full max-w-3xl mx-auto font-semibold"
@@ -103,7 +103,7 @@ const handleCreateNewNote = () => {
 
     <main
       v-else-if="creatingNewNote"
-      class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5"
+      class="mt-10 mx-auto w-full text-center grid grid-rows-[1fr_auto] gap-5"
     >
       <textarea
         ref="newNoteTextArea"
