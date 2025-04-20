@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTemplateRef } from 'vue'
 import { useDateFormat } from '@vueuse/core'
 import type { Note } from '~/types/notes.type';
 
@@ -6,8 +7,8 @@ const props = defineProps<{
   selectedNote: Note | null
 }>()
 
-const { updateNote, handleCreateNewNote, addNote } = useNotesStore()
-const { updatingNote, newNote, creatingNewNote, addingNewNote } = storeToRefs(useNotesStore())
+const { updateNote, addNote, deleteNote } = useNotesStore()
+const { updatingNote, newNote, creatingNewNote, addingNewNote, selectedNote: selectedNoteStore } = storeToRefs(useNotesStore())
 
 const updatedNote = ref<Note['text'] | undefined>('');
 const formattedDate = (date: Date) => {
@@ -33,6 +34,21 @@ const handleUpdateNote = async () => {
 const handleAddNewNote = async () => {
   if (newNote.value.length) await addNote(new Date())
 }
+
+const handleDeleteNote = async () => {
+  if (props.selectedNote) await deleteNote()
+}
+
+const newNoteTextArea = useTemplateRef('newNoteTextArea')
+watchEffect(() => {
+  if (newNoteTextArea.value) {
+    newNoteTextArea.value.focus()
+  }
+})
+const handleCreateNewNote = () => {
+  creatingNewNote.value = true
+  selectedNoteStore.value = null
+}
 </script>
 
 <template>
@@ -42,17 +58,19 @@ const handleAddNewNote = async () => {
         label="Create note"
         :icon="'i-lucide-pencil-line'"
         :color="!selectedNote && !creatingNewNote ? 'success' : 'neutral'"
-        :class="{ 'animate-pulse ': !selectedNote && !creatingNewNote}"
+        :class="{ 'animate-pulse ': !selectedNote && !creatingNewNote }"
         :variant="!selectedNote && !creatingNewNote ? 'soft' : 'ghost'"
         size="sm"
         @click="handleCreateNewNote"
       />
       <UButton
+        v-if="selectedNote"
         label=""
         :icon="'i-lucide-trash'"
         color="neutral"
         variant="ghost"
         size="sm"
+        @click="handleDeleteNote"
       />
     </header>
 
@@ -83,8 +101,12 @@ const handleAddNewNote = async () => {
       />
     </main>
 
-    <main v-else-if="creatingNewNote" class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5">
+    <main
+      v-else-if="creatingNewNote"
+      class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5"
+    >
       <textarea
+        ref="newNoteTextArea"
         v-model="newNote"
         class="text-zinc-400 w-full max-w-3xl mx-auto h-full !border-none !bg-transparent focus:outline-0 resize-none"
         placeholder="Start typing..."
@@ -101,7 +123,10 @@ const handleAddNewNote = async () => {
       />
     </main>
 
-    <main v-else class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5">
+    <main
+      v-else
+      class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5"
+    >
       <p class="flex justify-center items-center gap-4">
         <span class="text-4xl">😱</span>
         Wow ... So empty! Click "Create note" to start creating your first note
