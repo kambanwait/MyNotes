@@ -46,9 +46,6 @@ export default defineEventHandler(async (event) => {
       loggedInAt: new Date()
     })
 
-    return {
-      statusCode: 200,
-      ok: true,
-    }
+    return await getUserSession(event);
   }
 })
