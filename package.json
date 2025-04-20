@@ -10,9 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.11.0",
     "@prisma/client": "^6.6.0",
+    "@vueuse/core": "^13.1.0",
     "nuxt": "^3.16.2",
-    "nuxt-auth-utils": "^0.5.20"
+    "nuxt-auth-utils": "^0.5.20",
+    "pinia": "^3.0.2"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.37",
