@@ -7,7 +7,10 @@ export default defineEventHandler(async (event) => {
     const notes = await prisma.note.findMany({
       where: {
         userId: Number(id),
-      }
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
     })
 
     return {
