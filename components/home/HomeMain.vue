@@ -17,9 +17,6 @@ const formattedDate = (date: Date) => {
 watch(
   () => props.selectedNote,
   (newNote, oldNote) => {
-    // console.log(newNote)
-    // console.log(oldNote)
-    
     if (newNote?.id !== oldNote?.id) {
       updatedNote.value = newNote?.text
     };
