@@ -19,5 +19,9 @@ onMounted(async () => {
 </script>
 
 <template>  
+  <main
+    class="h-screen text-gray-500 grid grid-rows-[minmax(320px,_350px)_1fr] md:grid-rows-1 md:grid-cols-[320px_1fr]"
+  > 
     </template>
+  </main>
 </template>
