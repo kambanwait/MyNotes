@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
       addNoteSchema.parse
     );
 
-    await prisma.note.create({
+    const reponse = await prisma.note.create({
       data: {
         text,
         userId,
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       ok: true,
-      data: "success",
+      data: reponse,
     };
   } catch (error) {
     // if (error.code === "P2002") {
