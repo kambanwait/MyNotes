@@ -37,16 +37,16 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  // runtimeConfig: {
-  //   session: {
-  //     name: 'nuxt-session',
-  //     password: process.env.NUXT_SESSION_PASSWORD || '',
-  //     cookie: {
-  //       sameSite: 'lax',
-  //       secure: process.env.NODE_ENV === 'production',
-  //     },
-  //   },
-  // },
+  runtimeConfig: {
+    session: {
+      name: 'nuxt-session',
+      password: process.env.NUXT_SESSION_PASSWORD || '',
+      cookie: {
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
 
   build: {
     transpile: ['~/prisma/client'], // <-- add this
