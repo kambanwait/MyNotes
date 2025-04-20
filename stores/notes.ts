@@ -1,7 +1,9 @@
+import type { Note } from '~/types/notes.type';
 import { defineStore } from 'pinia';
-import type { Note } from '@/types/notes';
 
 export const useNotesStore = defineStore('notesStore', () => {
+  const { user } = useUserSession()
+  
   const selectedNote = ref<Note | null>(null)
   
   const allNotes = ref<Note[]>([])
@@ -11,7 +13,6 @@ export const useNotesStore = defineStore('notesStore', () => {
     selectedNote.value = note
   }
 
-  const fetchAllNotes = async () => {
   const todaysNotes: ComputedRef<Note[]> = computed(() => {
     return allNotes.value.filter((note: Note ) => {
       const noteDate = new Date(note.updatedAt)
@@ -39,9 +40,11 @@ export const useNotesStore = defineStore('notesStore', () => {
     })
   })
 
+  const fetchAllUserNotes = async () => {
     fetchingAllNotes.value = true
     try {
-      const response = await $fetch('/api/notes')
+      const response = await $fetch(`/api/notes/${user.value.id}`);
+
       if (response?.ok) {
         allNotes.value = response?.data.map(note => ({
           ...note,
@@ -57,7 +60,7 @@ export const useNotesStore = defineStore('notesStore', () => {
 
   return {
     setSelectedNote,
-    fetchAllNotes,
+    fetchAllUserNotes,
     fetchingAllNotes,
     selectedNote,
     allNotes,
