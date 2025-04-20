@@ -71,6 +71,7 @@ export const useNotesStore = defineStore('notesStore', () => {
         method: 'PATCH',
         body: {
           updatedNote,
+          userId: user.value?.id,
         }
       })
 
