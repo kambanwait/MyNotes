@@ -41,8 +41,9 @@ const handleAddNewNote = async () => {
       <UButton
         label="Create note"
         :icon="'i-lucide-pencil-line'"
-        color="neutral"
-        variant="ghost"
+        :color="!selectedNote && !creatingNewNote ? 'success' : 'neutral'"
+        :class="{ 'animate-pulse ': !selectedNote && !creatingNewNote}"
+        :variant="!selectedNote && !creatingNewNote ? 'soft' : 'ghost'"
         size="sm"
         @click="handleCreateNewNote"
       />
@@ -57,7 +58,7 @@ const handleAddNewNote = async () => {
 
     <main
       v-if="selectedNote"
-      class="my-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5"
+      class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5"
     >
       <small
         class="text-zinc-500 text-left w-full max-w-3xl mx-auto font-semibold"
@@ -82,7 +83,7 @@ const handleAddNewNote = async () => {
       />
     </main>
 
-    <main v-else-if="creatingNewNote">
+    <main v-else-if="creatingNewNote" class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5">
       <textarea
         v-model="newNote"
         class="text-zinc-400 w-full max-w-3xl mx-auto h-full !border-none !bg-transparent focus:outline-0 resize-none"
@@ -100,8 +101,11 @@ const handleAddNewNote = async () => {
       />
     </main>
 
-    <main v-else>
-      <p>Click Create Note</p>
+    <main v-else class="mt-10 mx-auto w-full text-center grid grid-rows-[auto_1fr] gap-5">
+      <p class="flex justify-center items-center gap-4">
+        <span class="text-4xl">😱</span>
+        Wow ... So empty! Click "Create note" to start creating your first note
+      </p>
     </main>
 
   </section>
