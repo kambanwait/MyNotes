@@ -2,7 +2,7 @@
 import type { FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
 
-const { user } = useUserSession()
+const { user, fetch } = useUserSession()
 
 const schema = z.object({
   email: z.string().email('Invalid email'),
@@ -21,14 +21,22 @@ const isSubmitting = ref<boolean>(false)
 
 onMounted(() => {
   // If there's already a session in the browser, then re-direct the user to their homepage
-  if (user.value) navigateTo({ name: 'home' })
+  if (user.value) {
+    toast.add({
+      title: 'Already logged in',
+      description: "Redirecting to your notes...",
+      color: 'info',
+      duration: 2000,
+    })
+    navigateTo({ path: '/' })
+  }
 })
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   isSubmitting.value = true
 
   try {
-    const response = await $fetch('/api/login', {
+    await $fetch('/api/login', {
       method: 'POST',
       body: {
         email: event.data.email,
@@ -36,26 +44,15 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       }
     })
 
-    if (response?.ok) {
-      toast.add({
-        title: 'Logged in',
-        description: "Redirecting to your notes. If you're not redirected automatically, click 'home' below.",
-        color: 'success',
-        duration: 0,
-        actions: [{
-          icon: 'i-lucide-house',
-          label: 'To your home page',
-          color: 'success',
-          onClick: (event) => {
-            event?.stopPropagation()
-            navigateTo({ name: 'home' })
-          }
-        }]
-      })
-      await navigateTo({ name: 'home' })
-    } else {
-      throw Error
-    }
+    await fetch()
+
+    toast.add({
+      title: 'Logged in',
+      description: "Redirecting to your notes...",
+      color: 'success',
+      duration: 1000,
+    })
+    navigateTo({ path: '/' })
   } catch (error) {
     // Check for Zod error message or another type of error message
     const errorMessage = error.response?._data?.data?.issues
