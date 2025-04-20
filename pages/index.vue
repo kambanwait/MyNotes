@@ -26,6 +26,6 @@ onMounted(async () => {
       <HomeSide :fetching="fetchingAllNotes" :selected-note="selectedNote" />
     </template>
 
-    <HomeMain v-if="selectedNote" :selected-note="selectedNote" />
+    <HomeMain :selected-note="selectedNote" />
   </main>
 </template>
