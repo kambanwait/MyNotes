@@ -52,3 +52,5 @@ Thumbs.db
 # Local Netlify folder
 .netlify
 .env
+prisma/dev.db.prisma/
+prisma/dev.db
