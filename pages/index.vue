@@ -22,6 +22,10 @@ onMounted(async () => {
   <main
     class="h-screen text-gray-500 grid grid-rows-[minmax(320px,_350px)_1fr] md:grid-rows-1 md:grid-cols-[320px_1fr]"
   > 
+    <template v-if="user">
+      <HomeSide :fetching="fetchingAllNotes" :selected-note="selectedNote" />
     </template>
+
+    <HomeMain v-if="selectedNote" :selected-note="selectedNote" />
   </main>
 </template>
