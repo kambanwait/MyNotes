@@ -85,7 +85,7 @@ const showPassword = ref<boolean>(false)
         >N</span>otes
       </h2>
       <h3 class="text-white text-xl">
-        Login in to your account
+        Log in to your account
       </h3>
 
       <p class="text-sm text-zinc-300">
