@@ -127,10 +127,6 @@ export const useNotesStore = defineStore('notesStore', () => {
 
   const creatingNewNote = ref<boolean>(false)
   const newNote = ref<Note['text']>('')
-  const handleCreateNewNote = () => {
-    creatingNewNote.value = true
-    selectedNote.value = null
-  }
 
   const deletingNote = ref<boolean>(false)
   const deleteNote = async () => {
@@ -173,7 +169,6 @@ export const useNotesStore = defineStore('notesStore', () => {
     fetchAllUserNotes,
     addNote,
     updateNote,
-    handleCreateNewNote,
     deleteNote,
     fetchingAllNotes,
     updatingNote,
