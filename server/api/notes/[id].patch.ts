@@ -36,6 +36,4 @@ export default defineEventHandler(async (event) => {
     console.log(error)
     // }
   }
-
-  return `User profile!`
 })
