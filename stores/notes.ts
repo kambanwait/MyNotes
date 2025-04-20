@@ -67,7 +67,7 @@ export const useNotesStore = defineStore('notesStore', () => {
     updatingNote.value = true;
 
     try { 
-      const response = await $fetch<{ ok: boolean; data: Note[] }>(`/api/notes/${noteId}`, {
+      const response = await $fetch<{ ok: boolean; data: Note }>(`/api/notes/${noteId}`, {
         method: 'PATCH',
         body: {
           updatedNote,
@@ -76,7 +76,7 @@ export const useNotesStore = defineStore('notesStore', () => {
 
       if (response?.ok) {
         fetchAllUserNotes()
-        setSelectedNote(response.data[0])
+        setSelectedNote(response.data)
         toast.add({
           title: 'Updated note',
           description: "Note was updated",
@@ -96,7 +96,7 @@ export const useNotesStore = defineStore('notesStore', () => {
     try {
       addingNewNote.value = true
 
-      const response = await $fetch<{ ok: boolean; data: Note[] }>('/api/notes', {
+      const response = await $fetch<{ ok: boolean; data: Note }>('/api/notes', {
         method: 'POST',
         body: {
           text: newNote.value,
@@ -112,7 +112,7 @@ export const useNotesStore = defineStore('notesStore', () => {
           color: 'success',
           duration: 1000,
         })
-        setSelectedNote(response?.data[0])
+        setSelectedNote(response?.data)
         fetchAllUserNotes()
         creatingNewNote.value = false
         newNote.value = ''
@@ -142,7 +142,7 @@ export const useNotesStore = defineStore('notesStore', () => {
         })
       }
 
-      const response = await $fetch<{ ok: boolean; data: Note[] }>(`/api/notes/${selectedNote.value?.id}`, {
+      const response = await $fetch<{ ok: boolean; data: Note }>(`/api/notes/${selectedNote.value?.id}`, {
         method: 'DELETE',
       })
 
