@@ -2,6 +2,7 @@ import type { Note } from '~/types/notes.type';
 import { defineStore } from 'pinia';
 
 export const useNotesStore = defineStore('notesStore', () => {
+  const toast = useToast()
   const { user } = useUserSession()
   
   const selectedNote = ref<Note | null>(null)
@@ -73,10 +74,12 @@ export const useNotesStore = defineStore('notesStore', () => {
       if (response?.ok) {
         fetchAllUserNotes()
         setSelectedNote(response.data)
-        return {
-          ok: true,
-          data: 'success'
-        }
+        toast.add({
+          title: 'Updated note',
+          description: "Note was updated",
+          color: 'success',
+          duration: 1000,
+        })
       }
     } catch (error) {
       console.error(error)
@@ -85,16 +88,56 @@ export const useNotesStore = defineStore('notesStore', () => {
     }
   }
 
-  const addNewNote = async () => {}
+  const addingNewNote = ref<boolean>(false)
+  const addNote = async (createdAt: Date) => {
+    try {
+      addingNewNote.value = true
+
+      const response = await $fetch('/api/notes', {
+        method: 'POST',
+        body: {
+          text: newNote.value,
+          userId: user.value?.id,
+          createdAt: createdAt,
+        }
+      })
+
+      if (response.ok) {
+        toast.add({
+          title: 'Created note',
+          description: "Note was created",
+          color: 'success',
+          duration: 1000,
+        })
+        fetchAllUserNotes()
+      }
+
+    } catch (error) {
+      console.error(error)
+    } finally {
+      addingNewNote.value = false
+    }
+  }
+
+  const creatingNewNote = ref<boolean>(false)
+  const newNote = ref<Note['text']>('')
+  const handleCreateNewNote = () => {
+    creatingNewNote.value = true
+    selectedNote.value = null
+  }
 
   return {
     setSelectedNote,
     fetchAllUserNotes,
-    addNewNote,
+    addNote,
     updateNote,
+    handleCreateNewNote,
     fetchingAllNotes,
     updatingNote,
+    addingNewNote,
     selectedNote,
+    newNote,
+    creatingNewNote,
     allNotes,
     todaysNotes,
     yesterdayNotes,
