@@ -1,4 +1,5 @@
 import type { Note } from '~/types/notes.type';
+
 import { defineStore } from 'pinia';
 
 export const useNotesStore = defineStore('notesStore', () => {
@@ -43,10 +44,12 @@ export const useNotesStore = defineStore('notesStore', () => {
 
   const fetchAllUserNotes = async () => {
     fetchingAllNotes.value = true
-    try {
-      const response = await $fetch(`/api/notes/${user.value.id}`);
+    const userId = user.value?.id
 
-      if (response?.ok) {
+    try {
+      const response = await $fetch<{ ok: boolean; data: Note[] }>(`/api/notes/${userId}`);
+
+      if (response.ok) {
         allNotes.value = response?.data.map(note => ({
           ...note,
         }))
@@ -109,7 +112,11 @@ export const useNotesStore = defineStore('notesStore', () => {
           color: 'success',
           duration: 1000,
         })
+        setSelectedNote(response?.data)
         fetchAllUserNotes()
+        creatingNewNote.value = false
+        newNote.value = ''
+        
       }
 
     } catch (error) {
