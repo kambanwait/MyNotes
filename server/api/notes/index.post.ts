@@ -1,29 +1,31 @@
-import { z } from 'zod'
-// import { prisma } from '../../prisma/db'
+import { z } from "zod";
+import { prisma } from '../../../prisma/db'
 
 const addNoteSchema = z.object({
-  text: z
-		.string()
-		.trim()
-		.min(1, { message: 'Text must not be empty' })
-})
+  text: z.string().trim().min(1, { message: "Text must not be empty" }),
+  userId: z.number(),
+  createdAt: z.string()
+});
 
 export default defineEventHandler(async (event) => {
   try {
-    const { text } = await readValidatedBody(event, addNoteSchema.parse)
+    const { text, userId, createdAt } = await readValidatedBody(
+      event,
+      addNoteSchema.parse
+    );
 
-    console.log(text)
-
-    // await prisma.note.create({
-    //   data: {
-    //     text,
-    //   }
-    // })
+    await prisma.note.create({
+      data: {
+        text,
+        userId,
+        createdAt,
+      },
+    });
 
     return {
       ok: true,
-      data: 'success'
-    }
+      data: "success",
+    };
   } catch (error) {
     // if (error.code === "P2002") {
     //   throw createError({
@@ -31,7 +33,7 @@ export default defineEventHandler(async (event) => {
     //     message: 'An email with this address already exists',
     //   })
     // } else {
-    throw new error
+    console.log(error)
     // }
   }
-})
+});
