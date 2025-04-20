@@ -25,7 +25,7 @@ const handleLogout = async () => {
   <aside class="bg-black p-4 shadow-2xl shadow-zinc-900">
     <section
       v-if="user"
-      class="grid gap-10 grid-rows-[70px_2fr] h-screen w-full overflow-hidden"
+      class="grid gap-10 grid-rows-[70px_1fr] h-screen w-full overflow-hidden pb-10"
     >
       <header class="flex flex-wrap justify-between items-center">
         <TheLogo />
@@ -46,7 +46,7 @@ const handleLogout = async () => {
 
       </header>
 
-      <main class="flex flex-col overflow-y-scroll">
+      <main class="flex flex-col overflow-y-auto h-full">
 
         <template v-if="fetching">
           <USkeleton class="h-5 w-full mb-2.5" />
@@ -58,7 +58,7 @@ const handleLogout = async () => {
         <template v-else>
 
           <template v-if="todaysNotes?.length">
-            <p class="text-xs font-bold text-zinc-500 my-4">Today</p>
+            <p class="text-xs font-bold text-zinc-500 my-4 sticky top-0">Today</p>
             <ol class="flex flex-col gap-2">
               <li
                 v-for="note in todaysNotes"
@@ -81,7 +81,7 @@ const handleLogout = async () => {
           </template>
 
           <template v-if="yesterdayNotes?.length">
-            <p class="text-xs font-bold text-zinc-500 my-4">Yesterday</p>
+            <p class="text-xs font-bold text-zinc-500 my-4 sticky top-0">Yesterday</p>
             <ol class="flex flex-col gap-2">
               <li
                 v-for="note in yesterdayNotes"
@@ -104,7 +104,7 @@ const handleLogout = async () => {
           </template>
 
           <template v-if="earlierNotes?.length">
-            <p class="text-xs font-bold text-zinc-500 my-4">Eearlier notes</p>
+            <p class="text-xs font-bold text-zinc-500 my-4 sticky top-0">Eearlier notes</p>
             <ol class="flex flex-col gap-2">
               <li
                 v-for="note in earlierNotes"
