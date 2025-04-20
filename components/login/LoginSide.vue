@@ -19,14 +19,16 @@ const state = reactive<Partial<Schema>>({
 const toast = useToast()
 const isSubmitting = ref<boolean>(false)
 
-onMounted(() => {
+onMounted(async () => {
   // If there's already a session in the browser, then re-direct the user to their homepage
   if (user.value) {
+    await fetch()
+
     toast.add({
       title: 'Already logged in',
       description: "Redirecting to your notes...",
       color: 'info',
-      duration: 2000,
+      duration: 1000,
     })
     navigateTo({ path: '/' })
   }
