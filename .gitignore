@@ -54,3 +54,6 @@ Thumbs.db
 .env
 prisma/dev.db.prisma/
 prisma/dev.db
+
+# nuxt
+.nuxt
