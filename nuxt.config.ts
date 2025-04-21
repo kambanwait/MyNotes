@@ -31,8 +31,4 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@pinia/nuxt',
   ],
-
-  build: {
-    // transpile: ['~/prisma/client'],
-  },
 })
