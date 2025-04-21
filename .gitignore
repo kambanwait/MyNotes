@@ -57,6 +57,7 @@ prisma/dev.db
 /generated/prisma
 generated/prisma
 prisma/generated/
+prisma/generated-client
 
 # nuxt
 .nuxt
