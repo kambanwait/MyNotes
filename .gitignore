@@ -54,7 +54,8 @@ Thumbs.db
 .env
 prisma/dev.db.prisma/
 prisma/dev.db
-generated/prisma/
+/generated/prisma
+prisma/generated/
 
 # nuxt
 .nuxt
