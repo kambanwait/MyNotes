@@ -52,13 +52,6 @@ Thumbs.db
 # Local Netlify folder
 .netlify
 .env
-prisma/dev.db.prisma/
-prisma/dev.db
-/generated/prisma
-generated/prisma
-prisma/generated/
-prisma/.generated/
-prisma/generated-client
 
 # nuxt
 .nuxt
