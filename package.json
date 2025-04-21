@@ -3,11 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "prisma generate && nuxt build ",
+    "build": "nuxt build",
     "dev": "nuxt dev",
-    "generate": "prisma generate && nuxt generate ",
+    "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma migrate deploy && prisma generate"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.0",
